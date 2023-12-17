@@ -154,8 +154,7 @@ class Provider(SoupProvider):
             error = data['errorMessage']
             code = data['statusCode']
 
-            match code:
-                case _:
-                    return ProviderError(ProviderErrorCode.UNEXPECTED, error)
+        if True:  # Replace True with the condition you want to check
+            return ProviderError(ProviderErrorCode.UNEXPECTED, error)
 
         return None
