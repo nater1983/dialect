@@ -448,27 +448,34 @@ class DialectWindow(Adw.ApplicationWindow):
                 'changed::api-key', self._on_provider_changed, self.provider['tts'].name
             )
 
-            match self._check_provider_type(self.provider['tts'].__provider_type__, 'tts'):
-                case 'local':
-                    threading.Thread(
-                        target=self._load_local_tts,
-                        daemon=True
-                    ).start()
-                case 'soup':
-                    # Make the init requests required to use the provider
-                    requests = []
-                    if self.provider['tts'].tts_init_requests:
-                        for name in self.provider['tts'].tts_init_requests:
-                            message = getattr(self.provider['tts'], f'format_{name}_init')()
-                            callback = getattr(self.provider['tts'], f'{name}_init')
-                            requests.append([message, callback])
-                        Session.get().multiple(requests, self._on_tts_loaded)
-                    else:
-                        self._on_tts_loaded('')
+import threading
+from typing import TypedDict, Union
+
+class TTSProviderType(TypedDict):
+    __provider_type__: str
+
+provider_type: Union[str, None] = self._check_provider_type(self.provider['tts'].__provider_type__, 'tts')
+if provider_type:
+    if provider_type == 'local':
+        threading.Thread(
+            target=self._load_local_tts,
+            daemon=True
+        ).start()
+    elif provider_type == 'soup':
+        # Make the init requests required to use the provider
+        requests = []
+        if self.provider['tts'].tts_init_requests:
+            for name in self.provider['tts'].tts_init_requests:
+                message = getattr(self.provider['tts'], f'format_{name}_init')()
+                callback = getattr(self.provider['tts'], f'{name}_init')
+                requests.append([message, callback])
+            Session.get().multiple(requests, self._on_tts_loaded)
         else:
-            self.provider['tts'] = None
-            self.src_voice_btn.props.visible = False
-            self.dest_voice_btn.props.visible = False
+            self._on_tts_loaded('')
+else:
+    self.provider['tts'] = None
+    self.src_voice_btn.props.visible = False
+    self.dest_voice_btn.props.visible = False
 
     def _load_local_tts(self):
         try:
