@@ -71,7 +71,9 @@ class DialectWindow(Adw.ApplicationWindow):
     src_lang_selector_m: LangSelector = Gtk.Template.Child()
     dest_lang_selector_m: LangSelector = Gtk.Template.Child()
 
-    toast: Adw.Toast | None = None  # for notification management
+from typing import Union
+
+    toast: Union[Adw.Toast, None] = None  # for notification management
     toast_overlay: Adw.ToastOverlay = Gtk.Template.Child()
 
     src_key_ctrlr: Gtk.EventControllerKey = Gtk.Template.Child()
