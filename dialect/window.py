@@ -74,7 +74,7 @@ class DialectWindow(Adw.ApplicationWindow):
 from typing import Union
 
     toast: Union[Adw.Toast, None] = None  # for notification management
-    toast_overlay: Adw.ToastOverlay = Gtk.Template.Child()
+toast_overlay: Adw.ToastOverlay = Gtk.Template.Child()
 
     src_key_ctrlr: Gtk.EventControllerKey = Gtk.Template.Child()
     win_key_ctrlr: Gtk.EventControllerKey = Gtk.Template.Child()
