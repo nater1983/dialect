@@ -192,6 +192,8 @@ class LocalProvider(BaseProvider):
     def download_speech(self, text: str, language: str, file: io.BytesIO):
         pass
 
+from typing import Union
+import GLib
 
 class SoupProvider(BaseProvider):
     """ Base class for providers using the libsoup engine """
@@ -210,7 +212,7 @@ class SoupProvider(BaseProvider):
         """ Loading error when initializing """
 
     @staticmethod
-    def encode_data(data) -> GLib.Bytes | None:
+    def encode_data(data) -> Union[GLib.Bytes, None]:
         """ Convert dict to JSON and bytes """
         data_glib_bytes = None
         try:
