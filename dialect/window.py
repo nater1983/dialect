@@ -892,26 +892,26 @@ else:
             self.player_event.set()
             logging.error('Some error occurred while trying to play.')
 
-    def download_speech(self):
-        if self.current_speech:
-            match self._check_provider_type(self.provider['tts'].__provider_type__, 'tts'):
-                case 'local':
-                    threading.Thread(
-                        target=self._download_local_tts,
-                        daemon=True
-                    ).start()
-                case 'soup':
-                    lang = self.provider['tts'].denormalize_lang(self.current_speech['lang'])
-                    message = self.provider['tts'].format_speech(self.current_speech['text'], lang)
-                    Session.get().send_and_read_async(
-                        message,
-                        0,
-                        None,
-                        self._on_tts_downloaded
-                    )
-        else:
-            self.toggle_voice_spinner(False)
-            self.voice_loading = False
+def download_speech(self):
+    if self.current_speech:
+        provider_type = self._check_provider_type(self.provider['tts'].__provider_type__, 'tts')
+        if provider_type == 'local':
+            threading.Thread(
+                target=self._download_local_tts,
+                daemon=True
+            ).start()
+        elif provider_type == 'soup':
+            lang = self.provider['tts'].denormalize_lang(self.current_speech['lang'])
+            message = self.provider['tts'].format_speech(self.current_speech['text'], lang)
+            Session.get().send_and_read_async(
+                message,
+                0,
+                None,
+                self._on_tts_downloaded
+            )
+    else:
+        self.toggle_voice_spinner(False)
+        self.voice_loading = False
 
     def _download_local_tts(self):
         """ Downlaod and play speech from local provider """
