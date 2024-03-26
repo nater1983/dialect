@@ -157,7 +157,7 @@ class Provider(SoupProvider):
             code = data['statusCode']
 
 from enum import Enum
-from typing import Any, Type
+from typing import Any
 
 class ProviderErrorCode(Enum):
     UNEXPECTED = 1
@@ -168,9 +168,7 @@ class ProviderError(Exception):
         self.error = error
 
 def handle_error(error: Any) -> ProviderError:
-    match error:
-        case _:
-            return ProviderError(ProviderErrorCode.UNEXPECTED, error)
+    return ProviderError(ProviderErrorCode.UNEXPECTED, error)
 
 # Example usage
 try:
@@ -179,3 +177,4 @@ try:
 except Exception as e:
     error = handle_error(e)
     print(error)
+
