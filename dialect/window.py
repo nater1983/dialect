@@ -1276,13 +1276,12 @@ def download_speech(self):
         # Load translator
         self.load_translator()
 
-    def _on_active_provider_changed(self, _settings, _provider, kind):
-        self.save_settings()
-        match kind:
-            case 'trans':
-                self.reload_translator()
-            case 'tts':
-                self.load_tts()
+def _on_active_provider_changed(self, _settings, _provider, kind):
+    self.save_settings()
+    if kind == 'trans':
+        self.reload_translator()
+    elif kind == 'tts':
+        self.load_tts()
 
     def _on_provider_changed(self, _settings, _key, name):
         if not self.translator_loading:
